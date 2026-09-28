@@ -15,9 +15,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,9 +39,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+fun checkAnswer(
+    userAnswer: Boolean,
+    correctAnswer: Boolean
+): Boolean {
+    return userAnswer == correctAnswer
+}
+
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     var currentQuestion by remember { mutableStateOf(0) }
+    var correctAnswers by remember { mutableStateOf(0) }
+    var answered by remember { mutableStateOf(false) }
 
     val questions = listOf(
         "Canberra is the capital of Australia.",
@@ -50,6 +59,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
         "The source of the Nile River is in Egypt.",
         "The Amazon River is the longest river in the Americas.",
         "Lake Baikal is the world's oldest and deepest freshwater lake."
+    )
+
+    val answers = listOf(
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
     )
 
     Scaffold(
@@ -100,14 +118,28 @@ fun MainScreen(modifier: Modifier = Modifier) {
             ) {
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if (!answered) {
+                            if (checkAnswer(true, answers[currentQuestion])) {
+                                correctAnswers++
+                            }
+                            answered = true
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("True")
                 }
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if (!answered) {
+                            if (checkAnswer(false, answers[currentQuestion])) {
+                                correctAnswers++
+                            }
+                            answered = true
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("False")
@@ -122,12 +154,22 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 onClick = {
                     if (currentQuestion < questions.size - 1) {
                         currentQuestion++
+                        answered = false
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Next")
             }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            Text(
+                text = "Correct answers: $correctAnswers",
+                fontSize = 18.sp
+            )
         }
     }
 }
