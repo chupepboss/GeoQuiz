@@ -148,16 +148,16 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.height(24.dp)
             )
 
-            Button(
-                onClick = {
-                    if (currentQuestion < questions.size - 1) {
+            if (currentQuestion < questions.size - 1) {
+                Button(
+                    onClick = {
                         currentQuestion++
                         answered = false
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Next")
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Next")
+                }
             }
 
             Spacer(
