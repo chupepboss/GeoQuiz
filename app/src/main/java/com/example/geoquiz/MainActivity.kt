@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +54,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
     var currentQuestion by remember { mutableStateOf(0) }
     var correctAnswers by remember { mutableStateOf(0) }
     var answered by remember { mutableStateOf(false) }
+    var showResult by remember { mutableStateOf(false) }
 
     val questions = listOf(
         "Canberra is the capital of Australia.",
@@ -70,8 +74,23 @@ fun MainScreen(modifier: Modifier = Modifier) {
         true
     )
 
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    LaunchedEffect(showResult) {
+        if (showResult) {
+            snackbarHostState.showSnackbar(
+                "Результат: $correctAnswers из ${questions.size} правильных ответов"
+            )
+        }
+    }
+
     Scaffold(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        }
     ) { innerPadding ->
 
         Column(
@@ -123,7 +142,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             if (checkAnswer(true, answers[currentQuestion])) {
                                 correctAnswers++
                             }
+
                             answered = true
+
+                            if (currentQuestion == questions.size - 1) {
+                                showResult = true
+                            }
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -135,7 +159,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             if (checkAnswer(false, answers[currentQuestion])) {
                                 correctAnswers++
                             }
+
                             answered = true
+
+                            if (currentQuestion == questions.size - 1) {
+                                showResult = true
+                            }
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -159,15 +188,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     Text("Next")
                 }
             }
-
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
-
-            Text(
-                text = "Correct answers: $correctAnswers",
-                fontSize = 18.sp
-            )
         }
     }
 }
