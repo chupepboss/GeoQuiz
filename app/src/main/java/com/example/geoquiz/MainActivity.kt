@@ -112,37 +112,35 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.height(32.dp)
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
+            if (!answered) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
 
-                Button(
-                    onClick = {
-                        if (!answered) {
+                    Button(
+                        onClick = {
                             if (checkAnswer(true, answers[currentQuestion])) {
                                 correctAnswers++
                             }
                             answered = true
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("True")
-                }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("True")
+                    }
 
-                Button(
-                    onClick = {
-                        if (!answered) {
+                    Button(
+                        onClick = {
                             if (checkAnswer(false, answers[currentQuestion])) {
                                 correctAnswers++
                             }
                             answered = true
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("False")
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("False")
+                    }
                 }
             }
 
